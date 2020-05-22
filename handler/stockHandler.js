@@ -24,13 +24,13 @@ function StockHandler() {
   }
   
   this.getLikes = (symbol, like, ip, callback) => {
-    console.log(like);
+    //console.log(like);
     MongoClient.connect(CONNECTION_STRING, (err, client) => {
       const db = client.db('stock-checker');
       if(err) {
         console.log(`Database err: ${err}`);
       } else {
-        console.log('successful database connection');
+        //console.log('successful database connection');
         
         if(!like || like === "false") {
           db.collection('stock-likes').find({stock: symbol.toLowerCase()}).toArray((err, data) => {
@@ -49,7 +49,7 @@ function StockHandler() {
           db.collection('stock-likes').findOneAndUpdate(
             {stock: symbol.toLowerCase()},
             {$addToSet: {likes: ip}},
-            {returnNewDocument: true, upsert: true},
+            {new: true, upsert: true},
             (err, data) => {
               if(err) console.log(err);
               const likeCount = data.value.likes.length;

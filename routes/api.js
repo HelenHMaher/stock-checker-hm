@@ -36,15 +36,18 @@ module.exports = function (app) {
           likeData.push(object);
           console.log(likeData);
           stockData[0].likes = likeData[0].likes;
-          if (stockData.length === 1) {
+          if (!Array.isArray(symbol)) {
+            console.log('one stock');
             res.json({stockData: stockData[0]});
+          } else {
+            if(likeData.length > 1) {
+              delete stockData[0].likes;
+              stockData[0].rel_likes = likeData[0].likes - likeData[1].likes;
+              stockData[1].rel_likes = likeData[1].likes - likeData[0].likes;
+              console.log('two stocks');
+              res.json({stockData: stockData});
           }
-          if(likeData.length > 1) {
-            delete stockData[0].likes;
-            stockData[0].rel_likes = likeData[0].likes - likeData[1].likes;
-            stockData[1].rel_likes = likeData[1].likes - likeData[0].likes;
-            res.json({stockData: stockData});
-          }                          
+          }
         }
       };
     
