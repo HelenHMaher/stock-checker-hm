@@ -1,4 +1,4 @@
-const MongoClient = require('mongodb').MongoClinet;
+const MongoClient = require('mongodb').MongoClient;
 const CONNECTION_STRING = process.env.DB;
 const axios = require('axios').default;
 
@@ -11,10 +11,10 @@ function StockHandler() {
     })
     .then(function (response) {
       const stockData = {
-        stock: response.data.symbol,
-        price: response.data.latestPrice
+        stock: response.data.symbol.toUpperCase(),
+        price: response.data.latestPrice.toString()
       }
-      console.log(stockData);
+      //console.log(stockData);
       callback('stockData', stockData);
     })
     .catch(function (error) {
@@ -23,38 +23,40 @@ function StockHandler() {
     })
   }
   
-  this.addLike = (symbol, like, ip, callback) => {
+  this.getLikes = (symbol, like, ip, callback) => {
+    //console.log(like);
     MongoClient.connect(CONNECTION_STRING, (err, client) => {
       const db = client.db('stock-checker');
       if(err) {
         console.log(`Database err: ${err}`);
       } else {
-        console.log('successful database connection');
+        //console.log('successful database connection');
         
-        if(like || like === 'true') {
+        if(!like || like === "false") {
+          db.collection('stock-likes').find({stock: symbol.toLowerCase()}).toArray((err, data) => {
+            if(err) { console.log(err);}
+            const likeData = {
+              stock: symbol.toUpperCase(),
+              likes: 0
+            }
+            if(data.length > 0) {
+              likeData.likes = data[0].likes ? data[0].likes.length : 0;
+            }
+        
+            callback('likeData', likeData);
+          });
+        } else {
           db.collection('stock-likes').findOneAndUpdate(
             {stock: symbol.toLowerCase()},
-            {$push: {likes: ip}},
-            {returnNewDocument: true, upsert: true},
+            {$addToSet: {likes: ip}},
+            {new: true, upsert: true},
             (err, data) => {
               if(err) console.log(err);
               const likeCount = data.value.likes.length;
               callback('likeData', {
-                stock: symbol,
+                stock: symbol.toUpperCase(),
                 likes: likeCount
               });
-          });
-        } else {
-          db.collection('stock-likes').find({stock: symbol.toLowerCase()}).toArray((err, data) => {
-            if(err) console.log(err);
-            let likeCount = 0;
-            if(data !== []) {
-              likeCount = data[0].likes ? data[0].likes.length : 0;
-            }
-            callback('likeData', {
-              stock: symbol,
-              likes: likeCount
-            });
           });
         }
       }
