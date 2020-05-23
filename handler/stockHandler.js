@@ -46,8 +46,9 @@ function StockHandler() {
             callback('likeData', likeData);
           });
         } else {
-          db.collection('stock-likes').findOneAndUpdate(
+          db.collection('stock-likes').findAndModify(
             {stock: symbol.toLowerCase()},
+            {},
             {$addToSet: {likes: ip}},
             {new: true, upsert: true},
             (err, data) => {
