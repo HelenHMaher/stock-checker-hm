@@ -1,5 +1,87 @@
+:root {
+  --gold: #F9DB22;
+  --yellow: #F7F14A;
+  --lightGreen: #A4CC44;
+  --green: #89AB0D;
+}
 
 #testui {
-  background: yellow;
+  background: var(--yellow);
   font-family: sans-serif;
+  width: 400px;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 0 10px;
+  align-times: center;
+  margin: 30px 10px 10px 30px;
+}
+
+.jsonResult {
+  padding: 5px;
+  min-height: 50px;
+  background: var(--gold);
+  border-radius: 10px;
+  border: 2px inset var(--green);
+}
+
+button {
+  margin: 10px;
+  background: var(--lightGreen);
+  border: 2px inset var(--green);
+  border-radius: 5px;
+  outline: none;
+}
+
+button:hover {
+  background: var(--green);
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(.9);
+}
+
+input[type='text'] {
+  height: 20px;
+  border: 2px inset lightGrey;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border: 3px inset var(--green);
+}
+
+label {
+  background: var(--gold);
+  display: flex-box;
+  width: 100px;
+  height: 20px;
+  border-radius: 5px;
+  padding: 4px;
+}
+input[type='checkbox'] {
+  height: 14px;
+  margin-right: 5px;
+}
+
+input[type='checkbox']:hover {
+  cursor: pointer;
+}
+
+footer {
+  font-family: sans-serif;
+  font-size: 14px;
+  margin-left: 40px;
+  margin-bottom: 40px;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  color: var(--green);
 }
